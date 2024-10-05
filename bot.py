@@ -3,15 +3,29 @@ from aiogram.types import Message
 import asyncio
 import os
 from dotenv import load_dotenv
+from aiogram import F
 
 
 load_dotenv()
 dp = Dispatcher()
 bot = Bot(token=os.getenv('TELEGRAM_TOKEN'))
 
-@dp.message()
-async def echo(message: Message) -> None:
-    await message.answer(text=f'{message.chat.full_name}')
+@dp.message(F.text == '/start')
+async def start(message: Message) -> None:
+    await message.answer(f'Привет, {message.chat.username}!\n'
+                         f'Давай хуярить' )
+
+@dp.message(F.text & F.text.startswith('a') & F.chat.username == 'ManyJackSMile')
+async def answer_a(message: Message) -> None:
+    await message.answer('Ты написал букву А')
+
+@dp.message(F.photo)
+async def photo(message: Message) -> None:
+    await message.answer("Ты отправил фото")
+
+
+
+
 
 
 async def main():
